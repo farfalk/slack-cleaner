@@ -12,6 +12,8 @@ from slack_cleaner import __version__
 from slack_cleaner.utils import Colors, Counter, TimeRange
 from slack_cleaner.args import Args
 
+from colorama import init
+init()  # for multiplatform compatibility of colored text .
 
 # Get and parse command line arguments
 args = Args()
@@ -219,12 +221,24 @@ def delete_file(file):
 
     counter.increase()
 
+##########################################
+# FOR THIS FUNCTION, CHECK IF PYTHON 2 OR 3
+# not pythonic... but functional
 
-def get_user_id_by_name(name):
-    for k, v in user_dict.iteritems():
-        if v == name:
-            return k
 
+if sys.version_info[0] == 2:
+    def get_user_id_by_name(name):
+        for k, v in user_dict.iteritems():
+            if v == name:
+                return k
+elif sys.version_info[0] == 3:
+    def get_user_id_by_name(name):
+        for k, v in user_dict.items():
+            if v == name:
+                return k
+
+
+##########################################
 
 def get_channel_id_by_name(name):
     res = slack.channels.list().body
